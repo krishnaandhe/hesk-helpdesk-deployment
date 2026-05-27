@@ -52,13 +52,15 @@ sudo apt update && sudo apt upgrade -y
 ---
 ### 🔹Step 2. Install Web Server
 ✅ NGINX
-```bash
+```
 sudo apt install nginx -y
 ``
+---
 ✅ Apache
-```bash
+```
 sudo apt install apache2 -y
-``
+```
+---
 ✔ Installs web server for hosting HESK
 ```
 ---

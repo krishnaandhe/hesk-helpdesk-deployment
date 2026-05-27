@@ -15,6 +15,10 @@ Track IT issues, improve SLA response time, centralized IT support.
 ## Architecture
 User -> Web Portal -> HESK App -> MySQL DB
 
+## 🏗️ HESK Architecture Diagram
+
+![HESK Architecture](assets/architecture-diagram.png)
+
 ## Business Impact
 Improved IT support efficiency and tracking.
 

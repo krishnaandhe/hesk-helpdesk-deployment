@@ -18,6 +18,14 @@ User -> Web Portal -> HESK App -> MySQL DB
 ## Business Impact
 Improved IT support efficiency and tracking.
 
+## 📚 Documentation
+
+- docs/architecture.md
+- docs/installation-windows.md
+- docs/installation-linux.md
+- docs/usecases.md
+- docs/business-impact.md
+
 ## 📄 Acknowledgement
 
 This project uses HESK (Help Desk Software), a free PHP-based helpdesk system.

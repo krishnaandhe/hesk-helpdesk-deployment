@@ -67,67 +67,81 @@ sudo apt install apache2 -y
 ### 🔹 Step 3: Install PHP (Compatible Version)
 ```bash
 sudo apt install php php-fpm php-mysql php-cli php-curl php-gd php-zip php-mbstring -y
-``
+```
 Verify:
 php -v
 ✔ PHP 8.1 / 8.2 recommended
-
+---
 ### 🔹 Step 4: Install MariaDB
-```bash
+```
 sudo apt install mariadb-server -y
+```
 Secure installation:
+```
 sudo mysql_secure_installation
-``
+```
 ✔ Protects DB with password & security policies
-
+---
 ### Step 5: Create Database & User
+```
 sudo mysql -u root -p
-``
+```
+---
+```
 CREATE DATABASE hesk_db;
 CREATE USER 'hesk_user'@'localhost' IDENTIFIED BY 'StrongPassword';
 GRANT ALL PRIVILEGES ON hesk_db.* TO 'hesk_user'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
-
+```
+---
 ✔ Prepares database for HESK
 
 ### 🔹 Step 6: Install phpMyAdmin (Optional)
-```bash
+---
+```
 sudo apt install phpmyadmin -y
-``
+```
 Apache Integration:
+```
 sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 sudo systemctl restart apache2
-
+```
 Access:
+```
 http://server-ip/phpmyadmin
+```
 ✔ Simplifies DB management
-
+---
 ### 🔹 Step 7: Download HESK
+---
 ```
 cd /var/www/html
 sudo mkdir helpdesk
 cd helpdesk
 sudo wget https://www.hesk.com/files/hesk.zip
-``
+```
 ✔ Downloads official HESK package
-
+---
 ### 🔹 Step 8: Extract HESK
 ```
 sudo apt install unzip -y
 sudo unzip hesk.zip
-``
+```
 ✔ Extracts application files
-
+---
 ### 🔹 Step 9: Set Permissions
+```
 sudo chown -R www-data:www-data /var/www/html/helpdesk
 sudo chmod -R 755 /var/www/html/helpdesk
+```
 ✔ Ensures web server access
-
+---
 ### 🔹 Step 10: Configure Web Server
 ✅ NGINX
+```
 sudo nano /etc/nginx/sites-available/helpdesk
-
+```
 ```
 server {
     listen 80;
@@ -145,39 +159,47 @@ server {
 }
 ```
 Enable:
+```
 sudo ln -s /etc/nginx/sites-available/helpdesk /etc/nginx/sites-enabled/
 sudo systemctl restart nginx
-
+```
 ✅ Apache
+```
 sudo a2enmod php
 sudo systemctl restart apache2
-
+```
 ✔ Enables PHP execution
-
+---
 ### 🔹 Step 11: Run Installer
 Open browser:
+```
 http://server-ip/helpdesk/install
-
+```
 ✔ Complete setup wizard
-
+---
 ### 🔹 Step 12: Secure Installation
+```
 sudo rm -rf /var/www/html/helpdesk/install
-
+```
 ✔ Prevents reinstallation attacks
-
+---
 ###🔹 Step 13: Enable SSL (HTTPS)
+```
 sudo apt install certbot python3-certbot-nginx -y
 sudo certbot --nginx
-✔ Secures traffic
-
-### 🔹 Step 14: Setup Backup
-crontab -e
-
-Add:
-0 2 * * * mysqldump -u root -pYourPassword hesk_db > /backup/hesk.sql
-``
-✔ Automates daily backup
 ```
+✔ Secures traffic
+---
+### 🔹 Step 14: Setup Backup
+```
+crontab -e
+```
+Add:
+```
+0 2 * * * mysqldump -u root -pYourPassword hesk_db > /backup/hesk.sql
+```
+✔ Automates daily backup
+---
 ### 🔹 Step 15: Testing
 -Open UI
 -Create ticket
@@ -185,7 +207,6 @@ Add:
 -Check logs
 
 ✔ Confirms full functionality
-```
 🔐 Security Best Practices
 -✅ Enable HTTPS (SSL)
 -✅ Restrict phpMyAdmin access

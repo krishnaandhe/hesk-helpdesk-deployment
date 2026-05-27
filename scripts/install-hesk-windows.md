@@ -2,95 +2,81 @@
 
 ---
 
-## 📌 Overview
+## 📊 Installation Steps (Including Downloads)
 
-This document provides a **fully automated PowerShell-based deployment** of:
+| Step | Phase                     | PowerShell / Action                                                                 | Explanation                                                                 |
+|------|--------------------------|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| 1    | IIS Installation         | `Install-WindowsFeature Web-Server -IncludeManagementTools`                        | Installs IIS Web Server                                                     |
+| 2    | Enable CGI               | `Install-WindowsFeature Web-CGI`                                                   | Required for PHP execution                                                   |
 
-- IIS Web Server
-- PHP Runtime
-- MySQL Database
-- HESK Helpdesk Application
+| 3    | Download PHP             | Visit:<br>https://windows.php.net/download/                                         | Download latest **Thread Safe (TS) x64 ZIP** version                        |
+| 4    | PHP Version Selection    | Recommended:<br>PHP 8.1 / 8.2                                                       | Stable and compatible with HESK                                             |
+| 5    | Extract PHP              | Extract to:<br>`C:\PHP`                                                            | PHP runtime location                                                        |
+| 6    | Configure PATH           | `setx PATH "$($env:PATH);C:\PHP" /M`                                               | Makes PHP globally accessible                                               |
+| 7    | PHP IIS Mapping          | Manual in IIS Manager → Handler Mapping                                            | Links PHP with IIS                                                          |
 
-Designed for **enterprise environments** running Windows Server.
+| 8    | Download MariaDB         | Visit:<br>https://mariadb.org/download/                                            | Download latest stable version                                              |
+| 9    | Install MariaDB          | Run installer manually OR use winget                                               | Database server installation                                                |
+| 10   | Start DB Service         | `net start MySQL` (or MariaDB service)                                             | Starts database service                                                     |
+
+| 11   | Database Setup           | `mysql -u root -p`                                                                 | Enter DB shell                                                              |
+| 12   | Create DB & User        | SQL:<br>`CREATE DATABASE hesk_db;`<br>`CREATE USER...;`                            | Prepare HESK database                                                       |
+
+| 13   | Download HESK            | Visit:<br>https://www.hesk.com/download/                                           | Download latest HESK ZIP package                                            |
+| 14   | Extract HESK             | Extract to:<br>`C:\inetpub\wwwroot\helpdesk`                                       | Application deployment location                                             |
+
+| 15   | File Copy (Optional)     | `xcopy D:\hesk C:\inetpub\wwwroot\helpdesk /E /I`                                  | Automates file deployment                                                   |
+| 16   | Set Permissions          | `icacls helpdesk /grant IIS_IUSRS:(OI)(CI)F /T`                                   | Enables IIS access                                                          |
+
+| 17   | Restart IIS              | `iisreset`                                                                        | Applies configuration                                                       |
+
+| 18   | Run Installer           | Open:<br>`http://localhost/helpdesk/install`                                       | Web installer setup                                                         |
+| 19   | Configure App           | Enter DB details + Admin setup                                                    | Final configuration                                                         |
+| 20   | Remove Install Folder   | `Remove-Item helpdesk\install -Recurse`                                            | Security cleanup                                                            |
+
+| 21   | Enable SSL              | Configure in IIS (Bindings)                                                       | Secure HTTPS setup                                                          |
+| 22   | Backup Setup            | `mysqldump -u root -p hesk_db > C:\backup\hesk.sql`                              | Data backup                                                                 |
+| 23   | Final Testing           | Create test ticket                                                               | Validate system                                                             |
 
 ---
 
-## ⚙️ Installation Flow (Automated + Explained)
+## 📌 Download Reference Summary
 
-| Step | Phase              | PowerShell / Command                                                                 | Explanation                                                                 |
-|------|-------------------|--------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| 1    | IIS Installation  | `Install-WindowsFeature Web-Server -IncludeManagementTools`                         | Installs IIS web server role                                                |
-| 2    | CGI Enable        | `Install-WindowsFeature Web-CGI`                                                    | Enables PHP support in IIS                                                  |
-| 3    | Create PHP Dir    | `New-Item -Path "C:\PHP" -ItemType Directory`                                       | Creates PHP installation directory                                          |
-| 4    | Extract PHP       | Manual download → extract to `C:\PHP`                                               | PHP binaries required to run HESK                                           |
-| 5    | Set Environment   | `setx PATH "$($env:PATH);C:\PHP" /M`                                                | Adds PHP to system PATH                                                     |
-| 6    | Install MySQL     | `winget install MySQL.MySQLServer`                                                  | Installs MySQL database                                                     |
-| 7    | Start MySQL       | `net start MySQL`                                                                   | Starts MySQL service                                                        |
-| 8    | Create DB         | `mysql -u root -p` (manual SQL execution)                                           | Create HESK database and user                                               |
-| 9    | Create Web Dir    | `New-Item -Path "C:\inetpub\wwwroot\helpdesk" -ItemType Directory`                  | Creates application directory                                               |
-| 10   | Copy HESK Files   | `xcopy D:\hesk C:\inetpub\wwwroot\helpdesk /E /I`                                   | Deploys HESK application                                                    |
-| 11   | Set Permissions   | `icacls C:\inetpub\wwwroot\helpdesk /grant IIS_IUSRS:(OI)(CI)F /T`                 | Grants IIS access to files                                                  |
-| 12   | IIS Restart       | `iisreset`                                                                        | Applies IIS configuration                                                   |
-| 13   | Access Installer  | `http://localhost/helpdesk/install`                                                | Launches web-based HESK installer                                           |
-| 14   | Remove Installer  | `Remove-Item "C:\inetpub\wwwroot\helpdesk\install" -Recurse`                       | Removes installation directory (security)                                   |
-| 15   | Backup Setup      | `mysqldump -u root -p hesk_db > C:\backup\hesk.sql`                                 | Creates database backup                                                     |
-| 16   | Final Validation  | Open browser → Create test ticket                                                  | Ensures system is working                                                   |
+| Component | Download Location | Recommended Version | Notes |
+|----------|------------------|--------------------|------|
+| PHP | https://windows.php.net/download/ | 8.1 / 8.2 | Use Thread Safe ZIP |
+| MariaDB | https://mariadb.org/download/ | Latest Stable | Production-ready DB |
+| HESK | https://www.hesk.com/download/ | Latest | Lightweight Helpdesk |
 
 ---
 
-## 🚀 Full Automation Script (PowerShell)
+## ⚠️ Important Compatibility Notes
 
-> ⚠️ Run PowerShell as Administrator
+- ✅ Use **PHP Thread Safe (TS)** for IIS  
+- ✅ Enable required PHP extensions:
+  - mysqli  
+  - gd  
+  - curl  
+  - mbstring  
+
+- ✅ Do NOT use:
+  - Non-thread-safe PHP with IIS (unless FCGI properly configured)
+
+---
+
+## ✅ Optional: Automated Download (PowerShell)
+
+> ⚠️ Use with caution in production
 
 ```powershell
-# ===============================
-# HESK AUTO INSTALL SCRIPT (WINDOWS)
-# ===============================
+# Download PHP
+Invoke-WebRequest -Uri "https://windows.php.net/downloads/releases/php-8.2.0-Win32-vs16-x64.zip" -OutFile "C:\Temp\php.zip"
 
-Write-Host "Starting HESK Deployment..." -ForegroundColor Green
+# Extract PHP
+Expand-Archive -Path "C:\Temp\php.zip" -DestinationPath "C:\PHP"
 
-# 1. Install IIS
-Install-WindowsFeature Web-Server -IncludeManagementTools
-Install-WindowsFeature Web-CGI
+# Download HESK
+Invoke-WebRequest -Uri "https://www.hesk.com/files/hesk.zip" -OutFile "C:\Temp\hesk.zip"
 
-# 2. Create PHP Directory
-New-Item -Path "C:\PHP" -ItemType Directory -Force
-
-Write-Host "Please download PHP manually and extract to C:\PHP"
-Pause
-
-# 3. Set PATH
-setx PATH "$($env:PATH);C:\PHP" /M
-
-# 4. Install MySQL
-winget install -e --id MySQL.MySQLServer
-
-Start-Sleep -Seconds 20
-
-# 5. Start MySQL
-net start MySQL
-
-Write-Host "Please configure MySQL Root Password and create database"
-Pause
-
-# 6. Create Web Directory
-New-Item -Path "C:\inetpub\wwwroot\helpdesk" -ItemType Directory -Force
-
-Write-Host "Copy HESK files into C:\inetpub\wwwroot\helpdesk"
-Pause
-
-# 7. Set Permissions
-icacls "C:\inetpub\wwwroot\helpdesk" /grant IIS_IUSRS:(OI)(CI)F /T
-
-# 8. Restart IIS
-iisreset
-
-Write-Host "Open browser and complete installation:"
-Write-Host "http://localhost/helpdesk/install"
-
-Pause
-
-# 9. Clean Install Folder
-Remove-Item "C:\inetpub\wwwroot\helpdesk\install" -Recurse -Force
-
-Write-Host "HESK Deployment Completed Successfully!" -ForegroundColor Green
+# Extract HESK
+Expand-Archive -Path "C:\Temp\hesk.zip" -DestinationPath "C:\inetpub\wwwroot\helpdesk"

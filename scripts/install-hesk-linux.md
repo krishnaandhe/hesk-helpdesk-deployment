@@ -173,7 +173,7 @@ Add:
 0 2 * * * mysqldump -u root -pYourPassword hesk_db > /backup/hesk.sql
 ``
 ✔ Automates daily backup
-
+```
 ### 🔹 Step 15: Testing
 -Open UI
 -Create ticket
@@ -181,7 +181,7 @@ Add:
 -Check logs
 
 ✔ Confirms full functionality
-
+```
 🔐 Security Best Practices
 -✅ Enable HTTPS (SSL)
 -✅ Restrict phpMyAdmin access

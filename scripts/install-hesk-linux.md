@@ -48,7 +48,8 @@ This document provides a **step-by-step setup of HESK Helpdesk on Linux** using:
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-``
+```
+---
 ### 🔹Step 2. Install Web Server
 ✅ NGINX
 ```bash
@@ -59,7 +60,8 @@ sudo apt install nginx -y
 sudo apt install apache2 -y
 ``
 ✔ Installs web server for hosting HESK
-
+```
+---
 ### 🔹 Step 3: Install PHP (Compatible Version)
 ```bash
 sudo apt install php php-fpm php-mysql php-cli php-curl php-gd php-zip php-mbstring -y

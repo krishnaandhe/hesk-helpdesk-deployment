@@ -17,3 +17,13 @@ User -> Web Portal -> HESK App -> MySQL DB
 
 ## Business Impact
 Improved IT support efficiency and tracking.
+
+## 📄 Acknowledgement
+
+This project uses HESK (Help Desk Software), a free PHP-based helpdesk system.
+
+Credits:
+HESK developed by Klemen Stirn  
+Official Website: https://www.hesk.com  
+
+This repository focuses on deployment, configuration, and enterprise usage.

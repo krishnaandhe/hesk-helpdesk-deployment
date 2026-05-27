@@ -49,3 +49,12 @@ This document provides a **step-by-step setup of HESK Helpdesk on Linux** using:
 ```bash
 sudo apt update && sudo apt upgrade -y
 ``
+### 🔹 2. Install Web Server
+✅ NGINX
+```bash
+sudo apt install nginx -y
+``
+✅ Apache
+```bash
+sudo apt install apache2 -y
+``

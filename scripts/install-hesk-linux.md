@@ -175,28 +175,26 @@ Add:
 ✔ Automates daily backup
 
 ### 🔹 Step 15: Testing
-Open UI
-Create ticket
-Verify DB entry
-Check logs
+-Open UI
+-Create ticket
+-Verify DB entry
+-Check logs
 
 ✔ Confirms full functionality
 
 🔐 Security Best Practices
-
-✅ Enable HTTPS (SSL)
-✅ Restrict phpMyAdmin access
-✅ Disable root remote login
-✅ Use strong passwords
-✅ Schedule backups
+-✅ Enable HTTPS (SSL)
+-✅ Restrict phpMyAdmin access
+-✅ Disable root remote login
+-✅ Use strong passwords
+-✅ Schedule backups
 
 ✅ Summary
 This setup ensures:
-
-Secure deployment
-Scalable architecture
-High performance
-Production readiness
+-Secure deployment
+-Scalable architecture
+-High performance
+-Production readiness
 
 
 

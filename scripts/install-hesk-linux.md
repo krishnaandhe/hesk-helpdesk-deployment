@@ -40,16 +40,16 @@ This document provides a **step-by-step setup of HESK Helpdesk on Linux** using:
 
 ---
 
-## ⚙️ Detailed Commands
+# ⚙️ Detailed Installation Commands
 
 ---
 
-### 🔹 1. System Update
+### 🔹Step 1. System Update
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 ``
-### 🔹 2. Install Web Server
+### 🔹Step 2. Install Web Server
 ✅ NGINX
 ```bash
 sudo apt install nginx -y
@@ -58,3 +58,64 @@ sudo apt install nginx -y
 ```bash
 sudo apt install apache2 -y
 ``
+✔ Installs web server for hosting HESK
+
+### 🔹 Step 3: Install PHP (Compatible Version)
+```bash
+sudo apt install php php-fpm php-mysql php-cli php-curl php-gd php-zip php-mbstring -y
+``
+Verify:
+php -v
+✔ PHP 8.1 / 8.2 recommended
+
+### 🔹 Step 4: Install MariaDB
+```bash
+sudo apt install mariadb-server -y
+Secure installation:
+sudo mysql_secure_installation
+``
+✔ Protects DB with password & security policies
+
+### Step 5: Create Database & User
+sudo mysql -u root -p
+``
+CREATE DATABASE hesk_db;
+CREATE USER 'hesk_user'@'localhost' IDENTIFIED BY 'StrongPassword';
+GRANT ALL PRIVILEGES ON hesk_db.* TO 'hesk_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+
+✔ Prepares database for HESK
+
+### 🔹 Step 6: Install phpMyAdmin (Optional)
+```bash
+sudo apt install phpmyadmin -y
+``
+Apache Integration:
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+sudo systemctl restart apache2
+
+Access:
+http://server-ip/phpmyadmin
+✔ Simplifies DB management
+
+### 🔹 Step 7: Download HESK
+cd /var/www/html
+sudo mkdir helpdesk
+cd helpdesk
+sudo wget https://www.hesk.com/files/hesk.zip
+``
+✔ Downloads official HESK package
+
+### 🔹 Step 8: Extract HESK
+```
+sudo apt install unzip -y
+sudo unzip hesk.zip
+``
+
+
+
+
+
+
+

@@ -26,7 +26,7 @@ This document outlines real-world use cases across IT, HR, and operational depar
 | UC-10      | Ticket Escalation   | Issue unresolved within SLA                            | Escalation triggered                     | Assigned to senior support                | Faster closure                           |
 | UC-11      | Multi-Location IT   | Issue raised from remote plant                         | Ticket raised                            | Routed based on location                  | Site-specific resolution                 |
 | UC-12      | Reporting & Analytics | IT manager reviews ticket trends                      | Dashboard/report access                  | Data aggregated                           | Better decision making                   |
-|------------|---------------------|----------------------------------------------------------|------------------------------------------|------------------------------------------|------------------------------------------|
+
 ---
 
 ## 🧩 Detailed Scenarios

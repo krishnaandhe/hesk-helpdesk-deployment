@@ -1,30 +1,68 @@
-# ⚙️ HESK Installation Steps (Windows vs Linux)
+# ⚙️ HESK Installation Guide (Windows vs Linux)
 
-## 📌 Deployment Modes Supported
+This document provides a **step-by-step deployment guide** for HESK Helpdesk across:
 
-- ✅ Windows Enterprise Deployment (IIS + PHP)
-- ✅ Linux Production Deployment (NGINX / Apache + PHP-FPM)
+- ✅ Windows Server (IIS + PHP + MySQL)
+- ✅ Linux Server (NGINX/Apache + PHP + MySQL)
+
+---
+
+## 📊 Installation Steps (Detailed Comparison)
 
 | Step | Phase                     | Windows (IIS)                                                                 | Linux (NGINX / Apache)                                                  |
 |------|--------------------------|------------------------------------------------------------------------------|-------------------------------------------------------------------------|
-| 1    | Environment Setup        | Install Windows Server & enable IIS Role                                     | Install Ubuntu/CentOS & update system                                  |
-| 2    | Web Server Setup         | Enable IIS + CGI                                                             | Install NGINX / Apache                                                  |
-| 3    | PHP Installation         | Install PHP for Windows + configure in IIS                                   | Install PHP + PHP-FPM                                                   |
-| 4    | PHP Configuration        | Configure handler mapping in IIS                                             | Configure php.ini & PHP-FPM settings                                   |
-| 5    | Database Installation    | Install MySQL / MariaDB                                                      | Install MySQL / MariaDB                                                |
-| 6    | DB Management Tool       | Install phpMyAdmin (Optional via IIS)                                        | Install phpMyAdmin via package manager                                 |
-| 7    | Database Setup           | Create DB using phpMyAdmin or MySQL CLI                                      | Create DB using MySQL CLI or phpMyAdmin                                |
-| 8    | Application Deployment   | Copy HESK files to C:\inetpub\wwwroot\helpdesk                               | Copy HESK files to /var/www/html/helpdesk                              |
-| 9    | Permissions Setup        | Configure NTFS permissions for IIS_IUSRS                                     | Set ownership: www-data / apache user                                  |
-| 10   | Web Access               | Access via http://server-ip/helpdesk                                         | Access via http://server-ip/helpdesk                                   |
-| 11   | Installation Wizard      | Run browser installation (IIS hosting)                                       | Run browser installation (NGINX/Apache hosting)                        |
-| 12   | Database Configuration   | Enter DB credentials (MySQL on Windows)                                      | Enter DB credentials (MySQL on Linux)                                  |
-| 13   | Application Setup        | Complete HESK setup steps                                                    | Complete HESK setup steps                                              |
-| 14   | Security Hardening       | Enable SSL in IIS + remove /install folder                                   | Enable SSL (Let's Encrypt) + remove /install folder                    |
-| 15   | Email Integration        | Configure SMTP via IIS/PHP                                                   | Configure SMTP via postfix/sendmail                                   |
-| 16   | Final Configuration      | Setup departments, roles, and categories                                     | Setup departments, roles, and categories                               |
-| 17   | Testing & Validation     | Test ticket creation via UI                                                  | Test ticket creation via UI                                            |
-| 18   | Backup Strategy          | Configure Windows Task Scheduler for DB backup                               | Setup cron job for DB backup                                           |
-| 19   | Monitoring               | Use Event Viewer / IIS logs                                                  | Use syslog / nginx/apache logs                                         |
-| 20   | Go-Live                  | Publish internal helpdesk URL                                                | Publish internal helpdesk URL                                          |
+| 1    | Environment Setup        | Install IIS: <br>`Install-WindowsFeature Web-Server -IncludeManagementTools` | Update system: <br>`sudo apt update && sudo apt upgrade -y`             |
+| 2    | Web Server Setup         | Enable CGI: <br>`Install-WindowsFeature Web-CGI`                              | Install NGINX/Apache: <br>`sudo apt install nginx -y`                   |
+| 3    | PHP Installation         | Download PHP → Extract to `C:\PHP`                                           | Install PHP: <br>`sudo apt install php php-fpm php-mysql -y`            |
+| 4    | PHP Configuration        | Add to PATH: <br>`setx PATH "$($env:PATH);C:\PHP" /M`                         | Edit config: <br>`sudo nano /etc/php/*/fpm/php.ini`                     |
+| 5    | DB Installation          | Install MySQL: <br>`winget install MySQL.MySQLServer`                         | Install MariaDB: <br>`sudo apt install mariadb-server -y`               |
+| 6    | DB Setup                 | `mysql -u root -p` <br> Create DB/User                                       | `sudo mysql -u root -p` <br> Create DB/User                            |
+| 7    | DB Commands              | `CREATE DATABASE hesk_db;` <br>`CREATE USER ...;`<br>`GRANT ALL;`             | Same SQL commands                                                       |
+| 8    | phpMyAdmin Setup         | Extract to IIS root                                                          | Install: <br>`sudo apt install phpmyadmin -y`                           |
+| 9    | App Deployment           | Copy to: <br>`C:\inetpub\wwwroot\helpdesk`                                   | Copy to: <br>`/var/www/html/helpdesk`                                  |
+| 10   | File Copy Command        | `xcopy D:\hesk C:\inetpub\wwwroot\helpdesk /E /I`                             | `sudo cp -r hesk /var/www/html/helpdesk`                                |
+| 11   | Permissions Setup        | `icacls helpdesk /grant IIS_IUSRS:(OI)(CI)F /T`                              | `sudo chown -R www-data:www-data /var/www/html/helpdesk`                |
+| 12   | Web Access               | `http://localhost/helpdesk`                                                  | `http://server-ip/helpdesk`                                            |
+| 13   | Installer Launch         | Open `/install` in browser                                                   | Same                                                                   |
+| 14   | Configuration            | Enter DB details, Admin setup                                                | Same                                                                   |
+| 15   | Secure Installation      | `Remove-Item helpdesk\install -Recurse`                                      | `sudo rm -rf /var/www/html/helpdesk/install`                            |
+| 16   | SSL Setup                | IIS → Bind SSL                                                              | `sudo certbot --nginx`                                                 |
+| 17   | Email Setup              | Configure SMTP in `php.ini`                                                  | Configure postfix/sendmail                                             |
+| 18   | Backup Setup             | `mysqldump -u root -p hesk_db > C:\backup\hesk.sql`                          | Cron: <br>`mysqldump -u root -p hesk_db > /backup/hesk.sql`            |
+| 19   | Monitoring               | IIS Logs, Event Viewer                                                      | `journalctl`, nginx/apache logs                                        |
+| 20   | Final Testing            | Test ticket creation                                                        | Test ticket creation                                                   |
+| 21   | Go-Live                  | Publish internal URL                                                        | Publish internal URL                                                   |
+
+---
+
+## 📌 Notes
+
+- Windows deployment is ideal for **enterprise MS ecosystem (IIS, AD, M365)**
+- Linux deployment is ideal for **scalability and performance**
+- Always:
+  - ✅ Remove `/install` folder after setup
+  - ✅ Enable HTTPS
+  - ✅ Backup database regularly
+
+---
+
+## ✅ Recommended Deployment Strategy
+
+| Environment | Recommended OS |
+|------------|---------------|
+| Enterprise Corporate | Windows + IIS |
+| Production / High Scale | Linux + NGINX |
+| Testing / Lab | Either |
+
+---
+
+## 🔐 Security Checklist
+
+- ✅ Configure SSL (HTTPS)
+- ✅ Restrict database remote access
+- ✅ Set strong admin passwords
+- ✅ Limit file upload sizes
+- ✅ Enable firewall rules
+
+---
 ``

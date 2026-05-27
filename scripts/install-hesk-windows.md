@@ -1,3 +1,4 @@
+
 # 💻 HESK Automated Installation – Windows Server (IIS)
 
 ---
@@ -31,3 +32,47 @@
 | 23   | Go-Live           | Publish URL                                        | Production deployment                   |
 
 ---
+
+
+---
+
+## 📌 Download Reference Summary
+
+| Component | Download Location | Recommended Version | Notes |
+|----------|------------------|--------------------|------|
+| PHP | https://windows.php.net/download/ | 8.1 / 8.2 | Use Thread Safe ZIP |
+| MariaDB | https://mariadb.org/download/ | Latest Stable | Production-ready DB |
+| HESK | https://www.hesk.com/download/ | Latest | Lightweight Helpdesk |
+
+---
+
+## ⚠️ Important Compatibility Notes
+
+- ✅ Use **PHP Thread Safe (TS)** for IIS  
+- ✅ Enable required PHP extensions:
+  - mysqli  
+  - gd  
+  - curl  
+  - mbstring  
+
+- ✅ Do NOT use:
+  - Non-thread-safe PHP with IIS (unless FCGI properly configured)
+
+---
+
+## ✅ Optional: Automated Download (PowerShell)
+
+> ⚠️ Use with caution in production
+
+```powershell
+# Download PHP
+Invoke-WebRequest -Uri "https://windows.php.net/downloads/releases/php-8.2.0-Win32-vs16-x64.zip" -OutFile "C:\Temp\php.zip"
+
+# Extract PHP
+Expand-Archive -Path "C:\Temp\php.zip" -DestinationPath "C:\PHP"
+
+# Download HESK
+Invoke-WebRequest -Uri "https://www.hesk.com/files/hesk.zip" -OutFile "C:\Temp\hesk.zip"
+
+# Extract HESK
+Expand-Archive -Path "C:\Temp\hesk.zip" -DestinationPath "C:\inetpub\wwwroot\helpdesk"

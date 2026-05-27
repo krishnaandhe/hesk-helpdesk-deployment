@@ -54,7 +54,7 @@ sudo apt update && sudo apt upgrade -y
 ✅ NGINX
 ```
 sudo apt install nginx -y
-``
+```
 ---
 ✅ Apache
 ```
@@ -62,7 +62,7 @@ sudo apt install apache2 -y
 ```
 ---
 ✔ Installs web server for hosting HESK
-```
+
 ---
 ### 🔹 Step 3: Install PHP (Compatible Version)
 ```bash
